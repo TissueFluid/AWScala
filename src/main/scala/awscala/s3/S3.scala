@@ -23,9 +23,16 @@ trait S3 extends aws.AmazonS3 {
 
   private[this] var region: aws.model.Region = aws.model.Region.fromValue(Region.default.getName)
 
+  private def s3RegionHack(regionName: String): String = {
+    regionName match {
+      case "us-east-1" => "US"
+      case _ => regionName
+    }
+  }
+
   def at(region: Region): S3 = {
     this.setRegion(region)
-    this.region = aws.model.Region.fromValue(region.getName)
+    this.region = aws.model.Region.fromValue(s3RegionHack(region.getName))
     this
   }
 
